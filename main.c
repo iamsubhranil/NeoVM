@@ -105,7 +105,7 @@ void test_fb(){
     scanf("%d", &num);
     while(num > 0){
         char c;
-        printf("[Input] Enter character %d : ", (num+1));
+        printf("[Input] Enter character %d : ", num);
         scanf(" %c", &c);
         write_char(c);
         num--;
@@ -115,17 +115,65 @@ void test_fb(){
     printf("\n[Test] Framebuffer test complete");
 }
 
+void test_registers(){
+    printf("\n[Test] Register test");
+    uint16_t word, reg;
+    printf("\n[Input] Enter a word to store : ");
+    scanf("%" SCNu16, &word);
+    printf("[Input] Enter a register number to store(0-7) : ");
+    scanf("%" SCNu8, &reg);
+    printf("[Info] Writing %" PRIu16 " to register %" PRIu8, word, reg);
+    write_reg(word, reg);
+    printf("\n[Info] Reading from register %" PRIu8, reg);
+    printf("\n[Info] Read %" PRIu16 " from register %"PRIu8, read_reg(reg), reg);
+    printf("\n[Test] ");
+    if(read_reg(reg) != word)
+        printf("Failed");
+    else
+        printf("Succeeded!");
+}
+
+void test_stack(){
+    printf("\n[Test] Stack test");
+    uint16_t word;
+    int32_t vali;
+    int64_t vall;
+    printf("\n[Input] Enter a word to push into stack : ");
+    scanf("%" SCNu16, &word);
+    printf("[Info] Pushing the 0x%2x into the stack..", word);
+    push(word);
+    printf("\n[Input] Enter an integer to push into stack : ");
+    scanf("%" SCNd32, &vali);
+    printf("[Info] Pushing 0x%4x into the stack", vali);
+    pushi(vali);
+    printf("\n[Input] Enter a long to push into stack : ");
+    scanf("%" SCNd64, &vall);
+    printf("[Info] Pushing 0x%8x into the stack\n[Info] Stack now : ", vall);
+    pushl(vall);
+    print_mem(0x1000, 0x1000 + 13);
+    printf("\n[Info] Popped long : %" PRId64, popl());
+    printf("\n[Info] Popped integer : %" PRId32, popi());
+    printf("\n[Info] Popped word : %" PRIu16, pop());
+    printf("\n[Test] Stack test complete");
+}
+
 int main(){
     init_mem();
     init_fb();
     init_reg();
     init_stack();
+    
+    printf("[Info] Reserved memory map\n");
+    print_resmem();
+    printf("\n");
 
     test_word(0, -1);
     test_int(0, -1);
     test_long(0, -1);
     test_reserve();
     test_fb();
+    test_registers();
+    test_stack();
 
     printf("\n");
     free_mem();

@@ -13,6 +13,8 @@ void free_reg(){
 }
 
 void write_reg(uint16_t value, unsigned char loc){
+    if(loc >= NUM_REG)
+        return;
     registers[loc] = value;
 }
 

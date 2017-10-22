@@ -7,7 +7,11 @@
 #define ESP 0
 #define EBP 1
 #define EIP 2
-#define ERT 3 // Stores the address of the return value of previous operation
+#define EAX 3
+#define EBX 4
+#define ECX 5
+#define EDX 6
+#define ESI 7
 
 void init_reg();
 void free_reg();

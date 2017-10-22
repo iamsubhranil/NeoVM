@@ -20,7 +20,7 @@ void push(uint16_t word){
         return;
     }
     pwrite_word(word, sp, token);
-    write_reg(sp+1, ESP);
+    write_reg(sp + 2, ESP);
 }
 
 // Pushes an integer(4 bytes) into the stack
@@ -43,17 +43,20 @@ uint16_t pop(){
         return 0;
     }
     write_reg(sp - 2, ESP);
-    return read_word(sp);
+    return read_word(sp - 2);
 }
 
 // Pops the next integer(4 bytes) from the stack
 int32_t popi(){
     int32_t ret = pop();
-    return (ret << 16) | pop();
+    int32_t ret2 = pop();
+    //printf("\n[Debug] Pop read : 0x%4x", ret);
+    return (ret2 << 16) | ret;
 }
 
 // Pops the next long(8 bytes) from the stack
 int64_t popl(){
     int64_t ret = popi();
-    return (ret << 32 ) | popi();
+    int64_t ret2 = popi();
+    return (ret2 << 32) | ret;
 }

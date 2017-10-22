@@ -20,6 +20,11 @@ int init_mem(){
     return memory != NULL;
 }
 
+// Frees the allocated memory
+void free_mem(){
+    free(memory);
+}
+
 // Checks if present access overlaps any reserved area
 static inline int check_access(uint16_t location){
     if(location < 0 || location > MEM_SIZE)
@@ -42,6 +47,8 @@ static inline int check_access(uint16_t location){
 int reserve_mem(uint16_t from, uint16_t to){
     if(!check_access(from) || !check_access(to))
         return -1;
+    if(from >= to)
+        return -1;
     res_count++;
     reserved_locations = (uint16_t **)realloc(reserved_locations, res_count*sizeof(uint16_t *));
     reserved_locations[res_count - 1] = (uint16_t *)malloc(sizeof(uint16_t)*2);
@@ -54,9 +61,14 @@ int reserve_mem(uint16_t from, uint16_t to){
     return res_count;
 }
 
-// Frees the allocated memory
-void free_mem(){
-    free(memory);
+// Prints the reserved memory blocks
+void print_resmem(){
+    int i = 0;
+    while(i < res_count){
+        printf("\n[Token %d] 0x%4x - 0x%4x (%u bytes)", (i+1), reserved_locations[i][0], reserved_locations[i][1],
+                reserved_locations[i][1] - reserved_locations[i][0]);
+        i++;
+    }
 }
 
 // Grants access to any reserved location if the appropiate token is provided

@@ -7,6 +7,7 @@
 int init_mem();
 void free_mem();
 int reserve_mem(uint16_t from, uint16_t to);
+void print_resmem();
 
 // Normal write methods
 void write_byte(unsigned char by, uint16_t location);
